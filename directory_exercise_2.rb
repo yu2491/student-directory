@@ -1,3 +1,5 @@
+# 2.Modify your program to only print the students whose name begins with a specific letter.
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
@@ -21,6 +23,13 @@ def print_header
   puts "The students of Villains Academy"
   puts "-------------"
 end
+
+def filter(students)
+  puts "Choose a letter to filter by: "
+  letter = gets.chomp
+  students.delete_if { |student| !student[:name].start_with?(/#{letter}/i) }
+end
+
 def print(students)
   students.each do |student|
     puts "#{student[:name]} (#{student[:cohort]} cohort)"
@@ -34,5 +43,5 @@ end
 #nothing happens until we call the methods
 students = input_students
 print_header
-print(students)
+print(filter(students))
 print_footer(students)
