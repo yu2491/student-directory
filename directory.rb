@@ -1,6 +1,10 @@
 =begin
-The filename we use to save and load data (menu items 3 and 4) is hardcoded.
-Make the script more flexible by asking for the filename if the user chooses these menu items.
+We are opening and closing the files manually.
+Read the documentation of the File class to find out
+how to use a code block (do...end) to access a file,
+so that we didn't have to close it explicitly
+(it will be closed automatically when the block finishes).
+Refactor the code to use a code block.
 =end
 
 @students = [] #empty array accessible to all methods
@@ -99,23 +103,23 @@ def print_footer
 end
 
 def save_students(filename)
-  file = File.open(filename, "w") #open the file for writing
-  @students.each do |student| #iterate over the array of students
-    student_data = [student[:name], student[:cohort]] #create array of student
-    csv_line = student_data.join(",") #convert to string
-    file.puts csv_line
+  file = File.open(filename, "w") do |file|
+    @students.each do |student| #iterate over the array of students
+      student_data = [student[:name], student[:cohort]] #create array of student
+      csv_line = student_data.join(",") #convert to string
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Students saved to #{filename}"
 end
 
 def load_students(filename)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-  name, cohort = line.chomp.split(',')
-    update_student_array(name, cohort)
+  file = File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+      update_student_array(name, cohort)
+    end
   end
-  file.close
   puts "Students uploaded from #{filename}"
 end
 
