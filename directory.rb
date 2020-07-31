@@ -5,6 +5,7 @@ if no file is given on startup? Which methods would you need to change?
 
 @students = [] #empty array accessible to all methods
 
+
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
@@ -37,6 +38,17 @@ def process(selection)
   end
 end
 
+def choose_cohort
+  cohorts = ['January','February','March','April','May','June',
+    'July', 'August','September','October','November','December']
+  puts "Cohort?"
+  cohort = gets.chomp
+  until cohorts.include?(cohort)
+    cohort = gets.chomp
+  end
+  cohort
+end
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
@@ -45,14 +57,14 @@ def input_students
   # while the name is not empty, repeat this code
   while !name.empty? do
     # add the student hash to the array
-    update_student_array(name)
+    update_student_array(name,choose_cohort)
     puts "Now we have #{@students.count} students"
     # get another name from the user
     name = STDIN.gets.chomp
   end
 end
 
-def update_student_array(name, cohort = :november)
+def update_student_array(name, cohort)
   @students << {name: name, cohort: cohort}
 end
 
@@ -68,8 +80,8 @@ def print_header
 end
 
 def print_student_list
-  @students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  @students.each_with_index do |student, index|
+    puts "#{index+1}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
@@ -87,6 +99,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "File saved"
 end
 
 def load_students(filename = "students.csv")
@@ -96,13 +109,13 @@ def load_students(filename = "students.csv")
     update_student_array(name, cohort)
   end
   file.close
+  puts "Loaded #{@students.count} from #{filename}"
 end
 
 def try_load_students
   ARGV.first.nil? ? filename = "students.csv" : filename = ARGV.first #first argument from the command line
   if File.exists?(filename) #if it exists
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}"
   else # if it doesn't exist
     puts "Sorry, #{filename} doesn't exist"
     exit #quit the progam
