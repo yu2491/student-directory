@@ -1,9 +1,6 @@
 =begin
-After we added the code to load the students from file,
-we ended up with adding the students to @students in two places.
-The lines in load_students() and input_students() are almost the same.
-This violates the DRY (Don't Repeat Yourself) principle.
-How can you extract them into a method to fix this problem?
+How could you make the program load students.csv by default
+if no file is given on startup? Which methods would you need to change?
 =end
 
 @students = [] #empty array accessible to all methods
@@ -55,6 +52,10 @@ def input_students
   end
 end
 
+def update_student_array(name, cohort = :november)
+  @students << {name: name, cohort: cohort}
+end
+
 def show_students
   print_header
   print_student_list
@@ -97,13 +98,8 @@ def load_students(filename = "students.csv")
   file.close
 end
 
-def update_student_array(name, cohort = :november)
-  @students << {name: name, cohort: cohort}
-end
-
 def try_load_students
-  filename = ARGV.first #first argument from the command line
-  return if filename.nil? # get out of method if it isn't given
+  ARGV.first.nil? ? filename = "students.csv" : filename = ARGV.first #first argument from the command line
   if File.exists?(filename) #if it exists
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}"
