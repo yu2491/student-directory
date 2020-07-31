@@ -1,9 +1,9 @@
 =begin
-We are de-facto using CSV format to store data.
-However, Ruby includes a library to work with the CSV files
-that we could use instead of working directly with the files.
-Refactor the code to use this library.
+Write a short program that reads its own source code
+(search StackOverflow to find out how to get
+the name of the currently executed file) and prints it on the screen.
 =end
+
 require 'csv'
 
 @students = [] #empty array accessible to all methods
@@ -127,6 +127,10 @@ def try_load_students
     puts "Sorry, #{filename} doesn't exist"
     exit #quit the progam
   end
+end
+
+def read_source_code
+  IO.read($0)
 end
 
 try_load_students
