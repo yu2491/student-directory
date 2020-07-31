@@ -1,11 +1,10 @@
 =begin
-We are opening and closing the files manually.
-Read the documentation of the File class to find out
-how to use a code block (do...end) to access a file,
-so that we didn't have to close it explicitly
-(it will be closed automatically when the block finishes).
-Refactor the code to use a code block.
+We are de-facto using CSV format to store data.
+However, Ruby includes a library to work with the CSV files
+that we could use instead of working directly with the files.
+Refactor the code to use this library.
 =end
+require 'csv'
 
 @students = [] #empty array accessible to all methods
 
@@ -103,22 +102,18 @@ def print_footer
 end
 
 def save_students(filename)
-  file = File.open(filename, "w") do |file|
+  CSV.open(filename, "wb") do |file|
     @students.each do |student| #iterate over the array of students
-      student_data = [student[:name], student[:cohort]] #create array of student
-      csv_line = student_data.join(",") #convert to string
-      file.puts csv_line
+      file << [student[:name], student[:cohort]]
     end
   end
   puts "Students saved to #{filename}"
 end
 
 def load_students(filename)
-  file = File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-      update_student_array(name, cohort)
-    end
+  CSV.foreach(filename) do |row|
+    name, cohort = row
+    update_student_array(name, cohort)
   end
   puts "Students uploaded from #{filename}"
 end
